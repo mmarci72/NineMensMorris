@@ -1,0 +1,141 @@
+﻿<Window x:Class="Malom.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Malom.WPF"
+        xmlns:view="clr-namespace:Malom.WPF.View"
+        mc:Ignorable="d"
+        Title="Malom" MinHeight="450" MinWidth="800" 
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />                
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Menu Grid.Row="0" Margin="0, 0, 0, 40">
+            <MenuItem Header="File">
+                <MenuItem Header="New Game" Command="{Binding NewGameCommand}"/>
+                <Separator />
+                <MenuItem Header="Load Game" Command="{Binding LoadGameCommand}"/>
+                <MenuItem Header="Save Game." Command="{Binding SaveGameCommand}" IsEnabled="{Binding SaveGameEnabled}"/>
+                <Separator />
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+        </Menu>
+        <Canvas Grid.Row="1" 
+                Top="250" Left="60"  
+                Width="500" Height="500">
+            <Rectangle Width="500" Height="500" StrokeThickness="5" Stroke="Black" >
+            </Rectangle>
+        </Canvas>
+
+        <Canvas Grid.Row="1" 
+                Width="380" Height="380"
+                Top="308" Left="120"
+                >
+            <Rectangle Width="380" Height="380" StrokeThickness="5" Stroke="Black" >
+            </Rectangle>
+        </Canvas>
+
+        <Canvas Grid.Row="1"
+                Width="270" Height="270"
+                Top="365" Left="180">
+            <Rectangle Width="270" Height="270" StrokeThickness="5" Stroke="Black" >
+            </Rectangle>
+        </Canvas>
+
+        <Line Grid.Row="1"
+              X1="400" X2="400"
+              Y1="5" Y2="120"
+              Stroke="Black" StrokeThickness="5">
+        </Line>
+
+        <Line Grid.Row="1"
+              X1="400" X2="400"
+              Y1="380" Y2="500"
+              Stroke="Black" StrokeThickness="5">
+        </Line>
+        
+        <Line Grid.Row="1"
+              X1="145" X2="260"
+              Y1="240" Y2="240"
+              Stroke="Black" StrokeThickness="5">
+        </Line>
+
+        <Line Grid.Row="1"
+              X1="525" X2="640"
+              Y1="240" Y2="240"
+              Stroke="Black" StrokeThickness="5">
+        </Line>
+
+        
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Fields}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Top="0" Bottom="0" Left="0" Right="0"></Canvas>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Height="20" Width="20" 
+                            Background="{Binding BgColor}" 
+                            Command="{Binding StepCommand}" 
+                            CommandParameter="{Binding Number}" 
+                            IsEnabled="{Binding IsEnabled}">
+
+                        <Button.Resources>  
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" 
+                                        Value="20"/>
+                            </Style>
+                        </Button.Resources>
+
+                        
+                        <Button.Margin>
+                            <MultiBinding>
+                                <MultiBinding.Converter>
+                                    <view:MarginConverter></view:MarginConverter>
+                                </MultiBinding.Converter>
+                                <Binding Path="X"/>
+                                <Binding Path="Y"/>
+                                <Binding Path="Loc"/>
+                                <Binding Path="Loc"/>
+
+                            </MultiBinding>
+                        </Button.Margin>
+
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <Button Grid.Row="2" Content="Skip turn" 
+                Margin="0, 30, 0, 0"
+                Visibility="{Binding SkipTurn, Converter={StaticResource BoolToVis}}"
+                Command="{Binding SkipCommand}"
+                >
+            
+        </Button>
+
+        <StatusBar Grid.Row="3" Margin="0, 15, 0, 0">
+            <StatusBarItem>
+                <TextBlock Text="Next Player: " />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text ="{Binding CurrentPlayer}"/>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <TextBlock Text="{Binding Text}"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
